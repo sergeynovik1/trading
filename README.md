@@ -27,7 +27,7 @@ _Notes:_
 
 ```
 git clone https://github.com/sergeynovik1/trading.git
-cd trading-task
+cd trading
 ```
 
 ### Install npm packages
