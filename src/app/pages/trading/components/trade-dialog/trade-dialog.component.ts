@@ -13,8 +13,6 @@ import { Subscription, filter, map, merge } from 'rxjs';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccountService } from '@app/services/account.service';
 import { entryPriceValidator } from '@app/validators/entry-price.validator';
-import { exitDateValidator } from '@app/validators/exit-date.validator';
-import { exitPriceValidator } from '@app/validators/exit-price.validator';
 
 @Component({
   standalone: true,
@@ -52,28 +50,13 @@ export class TradeDialogComponent implements OnInit, OnDestroy {
         this.config.data?.entryPrice,
         [Validators.required, entryPriceValidator(this.accountService)],
       ],
-      exitDate: [
-        this.config.data?.exitDate,
-        [Validators.required, exitDateValidator()],
-      ],
-      exitPrice: [
-        this.config.data?.exitPrice,
-        [Validators.required, exitPriceValidator()],
-      ],
+      exitDate: [this.config.data?.exitDate, [Validators.required]],
+      exitPrice: [this.config.data?.exitPrice, [Validators.required]],
       profit: [
         { value: this.config.data?.profit ?? 0, disabled: true },
         [Validators.required],
       ],
     });
-
-    this.subscription.add(
-      this.form.controls['entryPrice'].valueChanges.subscribe((entryPrice) => {
-        if (entryPrice > this.form?.controls['exitPrice'].value) {
-          this.form?.controls['exitPrice'].setValue(null);
-          this.form?.controls['exitPrice'].markAsPristine();
-        }
-      })
-    );
 
     this.subscription.add(
       merge(
@@ -88,11 +71,9 @@ export class TradeDialogComponent implements OnInit, OnDestroy {
           filter((data) => data['entryPrice'] && data['exitPrice'])
         )
         .subscribe((data) => {
-          data.exitPrice < data.entryPrice
-            ? 0
-            : this.form?.controls['profit'].setValue(
-                data.exitPrice - data.entryPrice
-              );
+          this.form?.controls['profit'].setValue(
+            data.exitPrice - data.entryPrice
+          );
         })
     );
   }

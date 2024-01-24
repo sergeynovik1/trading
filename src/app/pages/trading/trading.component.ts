@@ -84,7 +84,7 @@ export class TradingComponent implements OnInit, OnDestroy {
             .deleteTrade(selectedTrade)
             .pipe(
               switchMap(() =>
-                this.accountService.changeBalance(selectedTrade.entryPrice)
+                this.accountService.changeBalance(-selectedTrade.profit)
               )
             )
         )
@@ -96,7 +96,7 @@ export class TradingComponent implements OnInit, OnDestroy {
 
   private addTrade(trade: Trade): Observable<void> {
     return this.tradingService.addTrade(trade).pipe(
-      switchMap(() => this.accountService.changeBalance(-trade.entryPrice)),
+      switchMap(() => this.accountService.changeBalance(trade.profit)),
       tap(() => this.showToast('success', 'Trade added successful'))
     );
   }
@@ -104,9 +104,7 @@ export class TradingComponent implements OnInit, OnDestroy {
   public updateTrade(newTrade: Trade, lastTrade: Trade): Observable<void> {
     return this.tradingService.updateTrade(newTrade).pipe(
       switchMap(() =>
-        this.accountService.changeBalance(
-          lastTrade.entryPrice - newTrade.entryPrice
-        )
+        this.accountService.changeBalance(newTrade.profit - lastTrade.profit)
       ),
       tap(() => this.showToast('success', 'Trade updated successful'))
     );

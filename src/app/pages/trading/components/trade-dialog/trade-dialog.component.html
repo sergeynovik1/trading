@@ -1,11 +1,11 @@
-@if(form && todayDate) {
+@if(form) {
 <div class="form" [formGroup]="form">
   <div class="control">
     <span>Choose Entry Date</span>
     <p-calendar
       #entryDate
       formControlName="entryDate"
-      [minDate]="todayDate"
+      [maxDate]="exitDate.value"
       [readonlyInput]="true"
     ></p-calendar>
   </div>
@@ -23,6 +23,7 @@
   <div class="control">
     <span>Enter Exit Date</span>
     <p-calendar
+      #exitDate
       formControlName="exitDate"
       [minDate]="entryDate.value"
       [readonlyInput]="true"
