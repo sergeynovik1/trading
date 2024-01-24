@@ -1,0 +1,58 @@
+@if(form && todayDate) {
+<div class="form" [formGroup]="form">
+  <div class="control">
+    <span>Choose Entry Date</span>
+    <p-calendar
+      #entryDate
+      formControlName="entryDate"
+      [minDate]="todayDate"
+      [readonlyInput]="true"
+    ></p-calendar>
+  </div>
+  <div class="control">
+    <span>Enter Entry Price</span>
+    <p-inputNumber
+      formControlName="entryPrice"
+      mode="currency"
+      currency="USD"
+      locale="en-US"
+      [min]="1"
+    >
+    </p-inputNumber>
+  </div>
+  <div class="control">
+    <span>Enter Exit Date</span>
+    <p-calendar
+      formControlName="exitDate"
+      [minDate]="entryDate.value"
+      [readonlyInput]="true"
+    ></p-calendar>
+  </div>
+  <div class="control">
+    <span>Enter Exit Price</span>
+    <p-inputNumber
+      mode="currency"
+      currency="USD"
+      locale="en-US"
+      formControlName="exitPrice"
+      [min]="1"
+    >
+    </p-inputNumber>
+  </div>
+  <div class="control">
+    <span>Profit</span>
+    <p-inputNumber
+      mode="currency"
+      currency="USD"
+      locale="en-US"
+      formControlName="profit"
+    >
+    </p-inputNumber>
+  </div>
+  <p-button
+    label="Save"
+    [disabled]="form.invalid"
+    (onClick)="submit()"
+  ></p-button>
+</div>
+}

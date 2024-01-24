@@ -1,0 +1,26 @@
+<p-table [value]="trades" [(selection)]="selectedTrades">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th>Entry Date</th>
+      <th>Entry Price</th>
+      <th>Exit Date</th>
+      <th>Exit Price</th>
+      <th>Profit</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-trade>
+    <tr (click)="rowClicked(trade)" [style.cursor]="'pointer'">
+      <td (click)="stopClickPropagation($event)">
+        <p-tableCheckbox [value]="trade"></p-tableCheckbox>
+      </td>
+      <td>{{ trade.entryDate | date : 'MMM d, y' }}</td>
+      <td>{{ trade.entryPrice }}</td>
+      <td>{{ trade.exitDate | date : 'MMM d, y' }}</td>
+      <td>{{ trade.exitPrice }}</td>
+      <td>{{ trade.profit }}</td>
+    </tr>
+  </ng-template>
+</p-table>

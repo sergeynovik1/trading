@@ -1,0 +1,32 @@
+<div class="wrapper">
+  <p-card>
+    <div class="card-wrapper">
+      <app-toolbar>
+        <div class="buttons">
+          <p-button
+            icon="pi pi-plus"
+            label="New"
+            severity="success"
+            (onClick)="openTradeDialog()"
+          ></p-button>
+          <p-button
+            icon="pi pi-trash"
+            label="Delete"
+            severity="danger"
+            (onClick)="removeSelectedTrade()"
+            [disabled]="!!selectedTrades && !selectedTrades.length"
+          ></p-button>
+        </div>
+      </app-toolbar>
+      <app-table
+        *ngIf="trades | async as trds"
+        [trades]="trds"
+        [selectedTrades]="selectedTrades ?? []"
+        (onRowClick)="openTradeDialog($event)"
+        (onRowSelect)="onRowSelect($event)"
+      ></app-table>
+    </div>
+  </p-card>
+</div>
+
+<p-toast></p-toast>
