@@ -45,7 +45,7 @@ export class TradeDialogComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       id: [this.config.data?.id],
       entryDate: [
-        this.config.data?.entryDate || this.todayDate,
+        this.config.data?.entryDate ?? this.todayDate,
         [Validators.required],
       ],
       entryPrice: [
@@ -66,12 +66,14 @@ export class TradeDialogComponent implements OnInit, OnDestroy {
       ],
     });
 
-    this.form.controls['entryPrice'].valueChanges.subscribe((entryPrice) => {
-      if (entryPrice > this.form?.controls['exitPrice'].value) {
-        this.form?.controls['exitPrice'].setValue(null);
-        this.form?.controls['exitPrice'].markAsPristine();
-      }
-    });
+    this.subscription.add(
+      this.form.controls['entryPrice'].valueChanges.subscribe((entryPrice) => {
+        if (entryPrice > this.form?.controls['exitPrice'].value) {
+          this.form?.controls['exitPrice'].setValue(null);
+          this.form?.controls['exitPrice'].markAsPristine();
+        }
+      })
+    );
 
     this.subscription.add(
       merge(

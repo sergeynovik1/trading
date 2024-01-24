@@ -31,9 +31,8 @@ export class ChartDataService {
     return [
       ...new Set(
         data
-          .map((item) => item.exitDate)
+          .map((item) => moment(item.exitDate).format('YYYY-MM-DD'))
           .sort((a, b) => moment(a).valueOf() - moment(b).valueOf())
-          .map((date) => moment(date).format('YYYY-MM-DD'))
       ),
     ];
   }

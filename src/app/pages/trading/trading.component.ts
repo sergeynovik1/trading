@@ -67,7 +67,7 @@ export class TradingComponent implements OnInit, OnDestroy {
           width: '500px',
         })
         .onClose.pipe(
-          filter((res) => !!res),
+          filter(Boolean),
           switchMap((res) =>
             trade ? this.updateTrade(res, trade) : this.addTrade(res)
           )
