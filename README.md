@@ -26,7 +26,7 @@ _Notes:_
 ### Clone the repo
 
 ```
-git clone https://github.com/sergeynovik1/trading
+git clone https://github.com/sergeynovik1/trading.git
 cd trading-task
 ```
 
