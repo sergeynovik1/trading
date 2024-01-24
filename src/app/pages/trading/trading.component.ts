@@ -1,11 +1,7 @@
-import { TradingService } from './../../services/trading.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { TableComponent } from './components/table/table.component';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
-import { TradeDialogComponent } from './components/trade-dialog/trade-dialog.component';
 import {
   Observable,
   Subscription,
@@ -19,6 +15,10 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Trade } from '@app/interfaces/trade.interface';
 import { AccountService } from '@app/services/account.service';
+import { ToolbarComponent } from '@app/pages/trading/components/toolbar/toolbar.component';
+import { TableComponent } from '@app/pages/trading/components/table/table.component';
+import { TradingService } from '@app/services/trading.service';
+import { TradeDialogComponent } from '@app/pages/trading/components/trade-dialog/trade-dialog.component';
 
 @Component({
   selector: 'app-trading',
@@ -66,10 +66,13 @@ export class TradingComponent implements OnInit, OnDestroy {
           contentStyle: { overflow: 'visible', padding: '0px 20px 20px 20px' },
           width: '500px',
         })
-        .onClose.pipe(filter((res) => !!res))
-        .subscribe((res) =>
-          trade ? this.updateTrade(res, trade) : this.addTrade(res)
+        .onClose.pipe(
+          filter((res) => !!res),
+          switchMap((res) =>
+            trade ? this.updateTrade(res, trade) : this.addTrade(res)
+          )
         )
+        .subscribe()
     );
   }
 
@@ -91,29 +94,21 @@ export class TradingComponent implements OnInit, OnDestroy {
     );
   }
 
-  private addTrade(trade: Trade): void {
-    this.subscription.add(
-      this.tradingService
-        .addTrade(trade)
-        .pipe(
-          switchMap(() => this.accountService.changeBalance(-trade.entryPrice))
-        )
-        .subscribe(() => this.showToast('success', 'Trade added successful'))
+  private addTrade(trade: Trade): Observable<void> {
+    return this.tradingService.addTrade(trade).pipe(
+      switchMap(() => this.accountService.changeBalance(-trade.entryPrice)),
+      tap(() => this.showToast('success', 'Trade added successful'))
     );
   }
 
-  public updateTrade(newTrade: Trade, lastTrade: Trade): void {
-    this.subscription.add(
-      this.tradingService
-        .updateTrade(newTrade)
-        .pipe(
-          switchMap(() =>
-            this.accountService.changeBalance(
-              lastTrade.entryPrice - newTrade.entryPrice
-            )
-          )
+  public updateTrade(newTrade: Trade, lastTrade: Trade): Observable<void> {
+    return this.tradingService.updateTrade(newTrade).pipe(
+      switchMap(() =>
+        this.accountService.changeBalance(
+          lastTrade.entryPrice - newTrade.entryPrice
         )
-        .subscribe()
+      ),
+      tap(() => this.showToast('success', 'Trade updated successful'))
     );
   }
 

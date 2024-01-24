@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Account } from '@app/interfaces/account.interface';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Account } from '../interfaces/account.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {

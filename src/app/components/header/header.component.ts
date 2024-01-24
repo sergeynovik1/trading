@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AccountService } from './../../services/account.service';
 import { Component, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { Observable } from 'rxjs';
 import { Account } from '@app/interfaces/account.interface';
+import { AccountService } from '@app/services/account.service';
 
 @Component({
   selector: 'app-header',

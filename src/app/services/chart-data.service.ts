@@ -4,7 +4,7 @@ import { ProfitPerDay } from '@app/interfaces/profit-per-day.interface';
 import { Trade } from '@app/interfaces/trade.interface';
 import { ChartData } from 'chart.js';
 import * as moment from 'moment';
-import { AccountService } from './account.service';
+import { AccountService } from '@app/services/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChartDataService {

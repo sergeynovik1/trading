@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { AccountService } from '../services/account.service';
+import { AccountService } from '@app/services/account.service';
 
 export function entryPriceValidator(
   accountService: AccountService
