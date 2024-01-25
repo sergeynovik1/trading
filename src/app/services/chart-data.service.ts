@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { BalancePerDay } from '@app/interfaces/balance-per-day.interface';
 import { ProfitPerDay } from '@app/interfaces/profit-per-day.interface';
 import { Trade } from '@app/interfaces/trade.interface';
@@ -10,16 +10,11 @@ import { AccountService } from '@app/services/account.service';
 export class ChartDataService {
   constructor(private accountService: AccountService) {}
 
-  public getChartData(data: Trade[]): ChartData {
-    const labels: string[] = this.getSortedUniqueDates(data);
-
-    const profitPerDay: { [key: string]: number } = this.calculateProfitPerDay(
-      data,
-      labels
-    );
+  public getChartData(trades: Trade[]): ChartData {
+    const labels: string[] = this.getSortedUniqueDates(trades);
 
     const profitPerDayArray: ProfitPerDay[] =
-      this.convertToProfitPerDayArray(profitPerDay);
+      this.calculateProfitPerDay(trades);
 
     const balancePerDay: BalancePerDay[] =
       this.calculateBalancePerDay(profitPerDayArray);
@@ -37,34 +32,19 @@ export class ChartDataService {
     ];
   }
 
-  private calculateProfitPerDay(
-    data: Trade[],
-    labels: string[]
-  ): { [key: string]: number } {
-    const profitPerDay: { [key: string]: number } = labels.reduce(
-      (acc, date) => {
+  private calculateProfitPerDay(trades: Trade[]): ProfitPerDay[] {
+    return Object.entries(
+      trades.reduce((acc, trade) => {
+        const exitDate = moment(trade.exitDate).format('YYYY-MM-DD');
         return {
-          [date]: 0,
           ...acc,
+          [exitDate]: (acc[exitDate] ?? 0) + trade.profit,
         };
-      },
-      {}
-    );
-
-    data.forEach((item) => {
-      profitPerDay[moment(item.exitDate).format('YYYY-MM-DD')] += item.profit;
-    });
-
-    return profitPerDay;
-  }
-
-  private convertToProfitPerDayArray(profitPerDay: {
-    [key: string]: number;
-  }): ProfitPerDay[] {
-    return Object.entries(profitPerDay)
+      }, {} as Record<string, number>)
+    )
       .map(([date, profit]) => ({
         date,
-        profit: profit,
+        profit,
       }))
       .sort((a, b) => moment(a.date).valueOf() - moment(b.date).valueOf());
   }

@@ -5,7 +5,7 @@
     <p-calendar
       #entryDate
       formControlName="entryDate"
-      [maxDate]="exitDate.value"
+      [maxDate]="exitDate.value ?? null"
       [readonlyInput]="true"
     ></p-calendar>
   </div>
